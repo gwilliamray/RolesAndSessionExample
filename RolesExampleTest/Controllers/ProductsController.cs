@@ -46,7 +46,7 @@ namespace RolesExampleTest.Controllers
             return View(product);
         }
 
-        [Authorize]
+       
         public IActionResult AddToCart(int? id, string returnUrl)
         {
             Product product =  _context.Products.FirstOrDefault(p => p.ProductId == id);
@@ -62,6 +62,21 @@ namespace RolesExampleTest.Controllers
 
             return View(new CartIndexViewModel { Cart = GetCart(), ReturnUrl = returnUrl });
 
+        }
+        public IActionResult RemoveFromCart(int? id, string returnUrl)
+        {
+            Product product = _context.Products.FirstOrDefault(p => p.ProductId == id);
+
+            if (product != null)
+            {
+                Cart cart = GetCart();
+                cart.RemoveLine(product);
+                SaveCart(cart);
+
+            }
+
+
+            return View("AddToCart", new CartIndexViewModel { Cart = GetCart(), ReturnUrl = returnUrl });
         }
 
         private Cart GetCart()

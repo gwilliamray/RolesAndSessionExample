@@ -11,6 +11,8 @@ using Microsoft.Extensions.DependencyInjection;
 using RolesExampleTest.Data;
 using RolesExampleTest.Models;
 using RolesExampleTest.Services;
+using Microsoft.Extensions.FileProviders;
+using System.IO;
 
 namespace RolesExampleTest
 {
@@ -32,6 +34,11 @@ namespace RolesExampleTest
             services.AddIdentity<ApplicationUser, IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>()
                 .AddDefaultTokenProviders();
+
+            //// added for file upload 
+            //services.AddSingleton<IFileProvider>(
+            //new PhysicalFileProvider(
+            //    Path.Combine(Directory.GetCurrentDirectory(), "wwwroot")));
 
             // Add application services.
             services.AddTransient<IEmailSender, EmailSender>();
