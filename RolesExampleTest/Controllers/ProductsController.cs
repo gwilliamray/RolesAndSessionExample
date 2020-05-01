@@ -9,17 +9,21 @@ using Microsoft.EntityFrameworkCore;
 using RolesExampleTest.Data;
 using RolesExampleTest.Models;
 using RolesExampleTest.Infrastructure;
-
+using Microsoft.AspNetCore.Hosting;
+using System.IO;
 
 namespace RolesExampleTest.Controllers
 {
     public class ProductsController : Controller
     {
         private readonly ApplicationDbContext _context;
+        private readonly IHostingEnvironment hostingEnvironment;
 
-        public ProductsController(ApplicationDbContext context)
+        public ProductsController(ApplicationDbContext context,
+                                  IHostingEnvironment hostingEnvironment )
         {
             _context = context;
+            this.hostingEnvironment = hostingEnvironment;
         }
 
         // GET: Products
@@ -92,7 +96,7 @@ namespace RolesExampleTest.Controllers
 
         }
 
-        [Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin, ProdManager")]
         // GET: Products/Create
         public IActionResult Create()
         {
@@ -104,15 +108,35 @@ namespace RolesExampleTest.Controllers
         // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("ProductId,PartNumber,PartDesc,Price,Cost,ImageName")] Product product)
+        //public async Task<IActionResult> Create([Bind("ProductId,PartNumber,PartDesc,Price,Cost,ImageName")] Product product)
+        public async Task<IActionResult> Create(ProductViewModel model)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(product);
+                string uniqueFileName = null;
+                if(model.Photo != null)
+                {
+                    string uploadsFolder = Path.Combine(hostingEnvironment.WebRootPath, "images");
+                    uniqueFileName = Guid.NewGuid().ToString() + "_" + model.Photo.FileName;
+                    string filePath = Path.Combine(uploadsFolder, uniqueFileName);
+                    model.Photo.CopyTo(new FileStream(filePath, FileMode.Create));
+
+                }
+                // make a new product object
+                Product newProduct = new Product
+                {
+                    PartNumber = model.PartNumber,
+                    PartDesc = model.PartDesc,
+                    Cost = model.Cost,
+                    Price = model.Price,
+                    ImageName = uniqueFileName
+                };
+
+                _context.Add(newProduct);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Details", new { id = newProduct.ProductId });
             }
-            return View(product);
+            return View();
         }
 
         // GET: Products/Edit/5
