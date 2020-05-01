@@ -2,6 +2,8 @@
 
 @{
     ViewData["Title"] = "Details";
+    var photoImage = "~/Images/" + (Model.ImageName ?? "NoImage.jpg");
+
 }
 
 <h2>Details</h2>
@@ -39,6 +41,12 @@
         </dt>
         <dd>
             @Html.DisplayFor(model => model.ImageName)
+        </dd>
+        <dt>
+            Image
+        </dt>
+        <dd>
+            <img src="@photoImage" width="200" asp-append-version="true"/>
         </dd>
     </dl>
 </div>

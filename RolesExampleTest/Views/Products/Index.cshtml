@@ -1,7 +1,8 @@
 ﻿@model IEnumerable<RolesExampleTest.Models.Product>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Index";    
+
 }
 
 <h2>Index</h2>
@@ -33,10 +34,11 @@
     </thead>
     <tbody>
 @foreach (var item in Model) {
+    var photoImage = "~/Images/" + (item.ImageName ?? "NoImage.jpg");  
         <tr>
-            <td>
+           @*<td>
                 @Html.DisplayFor(modelItem => item.ProductId)
-            </td>
+            </td>*@
             <td>
                 @Html.DisplayFor(modelItem => item.PartNumber)
             </td>
@@ -53,8 +55,8 @@
                 @Html.DisplayFor(modelItem => item.ImageName)
             </td>
             <td>
-                <img src="~/images/@Html.DisplayFor(modelItem => item.ImageName)" width="100" />
-
+                @*<img src="~/images/@Html.DisplayFor(modelItem => item.ImageName)" width="30" />*@
+                <img src="@photoImage" width="30" asp-append-version="true" />  @*This forces the browser to load the image from the server*@
 
 
             </td>
