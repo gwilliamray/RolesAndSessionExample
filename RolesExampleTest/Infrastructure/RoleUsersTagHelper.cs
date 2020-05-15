@@ -36,11 +36,11 @@ namespace RolesExampleTest.Infrastructure
                 {
                     if(user != null && await userManager.IsInRoleAsync(user, role.Name))
                     {
-                        names.Add(user.UserName);
+                        names.Add(user.UserName );
                     }
                 }
             }
-            output.Content.SetContent(names.Count == 0 ? "No Users" : string.Join(",", names));
+            output.Content.SetContent(names.Count == 0 ? "No Users" : string.Join(", ", names));
         }
     }
 }

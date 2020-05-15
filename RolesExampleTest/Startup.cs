@@ -13,6 +13,7 @@ using RolesExampleTest.Models;
 using RolesExampleTest.Services;
 using Microsoft.Extensions.FileProviders;
 using System.IO;
+using RolesExampleTest.Infrastructure;
 
 namespace RolesExampleTest
 {
@@ -44,6 +45,7 @@ namespace RolesExampleTest
             services.AddTransient<IEmailSender, EmailSender>();
             services.AddMemoryCache();
             services.AddSession();
+           // services.AddTransient<RoleUsersTagHelper>();  //********Thought that I needed this but looks like no
 
             services.AddMvc();
         }
