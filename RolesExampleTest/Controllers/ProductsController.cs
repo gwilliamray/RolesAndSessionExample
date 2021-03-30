@@ -96,7 +96,7 @@ namespace RolesExampleTest.Controllers
 
         }
 
-        [Authorize(Roles = "Admin, ProdManager")]
+        //[Authorize(Roles = "Admin, ProdManager")]
         // GET: Products/Create
         public IActionResult Create()
         {
